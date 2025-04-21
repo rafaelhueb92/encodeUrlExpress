@@ -1,4 +1,4 @@
-# URL Shortener Service
+# Encode Url Express
 
 A simple, secure, and extensible URL shortener service built with Node.js, Express, and Helmet.
 
