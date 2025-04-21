@@ -1,22 +1,33 @@
 class encodeUrl {
     constructor() {
         this.urls = new Map();
-        console.log('encodeUrl is instanced.')
+    }
+
+    #arrContainsNumbers(arr = []) {
+        const numbers = "0123456789"
+        for (let i=0; i < arr.length; i++) {
+            if (numbers.includes(arr[i]))
+                return true;
+        }
+        return false;
     }
 
     encode(url,maxOfChars = 5) {
         try {
+
+            if (Array.from(this.urls.values()).includes(url)) return null; // check if the url already encoded
+
             const arrRandom = []
-            const AlphaNumerical = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            const numbers = "0123456789"
+            const AlphaNumerical = numbers + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             for (let i=0; i < maxOfChars; i++) {
-              // Base62 A-Z a-z 0-9
-              // 0 - 61 
-              const randomChar = Math.floor(Math.random() * AlphaNumerical.length);
-              arrRandom.push(AlphaNumerical[randomChar]) // Random value
+              const randomChar = Math.floor(Math.random() * 
+                                (i == maxOfChars - 1 && !this.#arrContainsNumbers(arrRandom) ? numbers.length : AlphaNumerical.length));
+                
+              arrRandom.push(AlphaNumerical[randomChar]) 
             }
             const encodedUrl = arrRandom.join('')
             this.urls.set(encodedUrl,url)
-            console.log('urls',this.urls)
             return encodedUrl;
         } catch (error) {
             throw error;   
@@ -28,14 +39,16 @@ class encodeUrl {
     }
 
     list() {
-        return [...this.urls.values()];
+        const listUrls = { };
+        Array.from(this.urls.keys()).forEach(k => {
+            listUrls[k] = this.urls.get(k)
+        })
+        return listUrls
     }
 
 }
 
 module.exports = (instance) => {
-    console.log('is here')
-    console.log('instance is ', instance)
     if (!instance) instance = new encodeUrl();
     return instance;
 }

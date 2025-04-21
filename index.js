@@ -10,8 +10,11 @@ const service = serviceInstance();
 app.use(helmet());
 
 app.get('/encode/:url', (req,res) => {
-    const { url } = req.params;
-    const encoded = service.encode(url);
+    const { url,maxOfChars } = req.params;
+    const encoded = service.encode(url,maxOfChars);
+
+    if (!encoded) return res.status(400).json({ message:'Url already encoded'});
+
     return res.send({encoded})
 })
 
@@ -22,7 +25,7 @@ app.get('/decode/:encodedUrl', (req,res) => {
 })
 
 app.get('/', (_,res) => {
-    const urls = service.urls;
+    const urls = service.list();
     return res.send(urls)
 })
 
